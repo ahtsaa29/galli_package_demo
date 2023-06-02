@@ -13,16 +13,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   List<GalliMarker> markers = [];
   final GalliController controller = GalliController(
-    authKey: "89a40903-b75a-46b6-822b-86eebad4fa36",
+    authKey: "Key",
     zoom: 16,
     maxZoom: 22,
     initialPosition: LatLng(27.672905, 85.312215),
   );
   final GalliMethods galliMethods =
-      GalliMethods("89a40903-b75a-46b6-822b-86eebad4fa36");
+      GalliMethods("Key");
   final ViewerClass viewer = ViewerClass(
     viewer: Viewer(
-      accessToken: "89a40903-b75a-46b6-822b-86eebad4fa36",
+      accessToken: "Key",
       pinIcon: const Icon(
         Icons.circle,
         size: 48,
