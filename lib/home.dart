@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -11,18 +13,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  var zoomLevel;
   List<GalliMarker> markers = [];
   final GalliController controller = GalliController(
-    authKey: "Key",
+    authKey: 'f3a094e9-2917-4317-9e81-c5bf2e6286da',
     zoom: 16,
     maxZoom: 22,
-    initialPosition: LatLng(27.672905, 85.312215),
+    // initialPosition: LatLng(27.672905, 85.312215),
   );
   final GalliMethods galliMethods =
-      GalliMethods("Key");
+      GalliMethods('f3a094e9-2917-4317-9e81-c5bf2e6286da');
   final ViewerClass viewer = ViewerClass(
     viewer: Viewer(
-      accessToken: "Key",
+      accessToken: 'f3a094e9-2917-4317-9e81-c5bf2e6286da',
       pinIcon: const Icon(
         Icons.circle,
         size: 48,
@@ -36,6 +39,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   SearchClass? searchClass;
   @override
   void initState() {
+    // log("zoom level: ${controller.map.zoom}");
+    // zoomLevel = controller.map.zoom;
     searchClass = SearchClass(
       onTapAutoComplete: (autoCompleteData) async {
         markers.clear();
@@ -72,7 +77,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               )));
           setState(() {});
           galliMethods.animateMapMove(
-              pinLocation, controller.map.zoom, this, mounted, controller.map);
+              pinLocation, 16, this, mounted, controller.map);
         }
         log("$locationName,$locationDistance KM");
       },
@@ -85,11 +90,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return SafeArea(
       child: Scaffold(
         body: GalliMap(
+          three60marker: Three60Marker(three60MarkerColor: Colors.purple),
+          loadingWidget: const LinearProgressIndicator(),
           show360Button: false,
           controller: controller,
           search: searchClass,
           markers: markers,
           onTap: (LatLng latLng) async {
+            ReverseGeocodingModel data = await galliMethods.reverse(latLng);
+            log("${data.toJson()}");
             markers.clear();
             setState(() {});
             markers.add(GalliMarker(
@@ -106,13 +115,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     size: 32,
                   ),
                 )));
-            log(latLng.toString());
             var locationSelected = await galliMethods.reverse(latLng);
-            log("${locationSelected!.address}");
-            searchClass!.updateSearchField(locationSelected.address!);
+            searchClass!.updateSearchField(locationSelected!.address!);
+            log("Zoom level :   ::: ${controller.map.zoom}");
             setState(() {});
           },
           children: [
+            Positioned(
+                bottom: 10,
+                child: GestureDetector(
+                  onTap: () async {
+                    ReverseGeocodingModel data = await galliMethods
+                        .reverse(LatLng(27.6704163, 85.3239504));
+                    log("${data.toJson()}");
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      color: Colors.red,
+                    ),
+                  ),
+                )),
             if (markers.isNotEmpty)
               Positioned(
                   bottom: 90,
