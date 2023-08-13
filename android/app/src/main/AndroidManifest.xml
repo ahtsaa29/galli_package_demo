@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="galli_package_demo"
+        android:label="internal_testing"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
